@@ -1,8 +1,8 @@
 class ForscoreCli < Formula
   desc "CLI tool for managing forScore metadata"
   homepage "https://github.com/danielhopkins/forscore-cli"
-  url "https://github.com/danielhopkins/forscore-cli/archive/refs/tags/v1.1.0.tar.gz"
-  sha256 "0708c9f1ad3a0a45fbfcd24c0f185966d63ae360fa04a1fb0957ddd26efde846"
+  url "https://github.com/danielhopkins/forscore-cli/archive/refs/tags/v1.2.0.tar.gz"
+  sha256 "f5c3ab29efa1121e8605b7fc8898a7882a1ea89193008310e5f177a2cafad5fd"
   license "MIT"
 
   depends_on "rust" => :build
