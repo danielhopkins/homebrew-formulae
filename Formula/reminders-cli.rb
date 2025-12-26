@@ -1,8 +1,8 @@
 class RemindersCli < Formula
   desc "Simple CLI for interacting with macOS Reminders"
   homepage "https://github.com/danielhopkins/reminders-cli"
-  url "https://github.com/danielhopkins/reminders-cli/releases/download/2.6.2/reminders.tar.gz"
-  sha256 "dae91532616afaba6f9fa305fa9b0d75bab3d8f8122cd4558e015acd7ef42c51"
+  url "https://github.com/danielhopkins/reminders-cli/releases/download/2.6.3/reminders.tar.gz"
+  sha256 "5eec9cc911d9e89f142e8b7eca3845c9c908b8c25f25dcd3ab54120941c9ca7c"
   license "MIT"
 
   def install
