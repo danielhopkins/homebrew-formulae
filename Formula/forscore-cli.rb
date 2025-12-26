@@ -5,10 +5,8 @@ class ForscoreCli < Formula
   sha256 "fe48fcb605d574661a515f227635011491a7c17110cdfdc3b6d447c884b0c524"
   license "MIT"
 
-  depends_on "rust" => :build
-
   def install
-    system "cargo", "install", *std_cargo_args
+    bin.install "forscore"
   end
 
   test do
