@@ -1,15 +1,11 @@
 class RemindersCli < Formula
   desc "Simple CLI for interacting with macOS Reminders"
   homepage "https://github.com/danielhopkins/reminders-cli"
-  url "https://github.com/danielhopkins/reminders-cli/archive/refs/tags/2.6.2.tar.gz"
-  sha256 "15780443919c98960a4acc720e3b1e6aaef36991f149ddb6593c20e7df938abe"
+  url "https://github.com/danielhopkins/reminders-cli/releases/download/2.6.2/reminders.tar.gz"
+  sha256 "dae91532616afaba6f9fa305fa9b0d75bab3d8f8122cd4558e015acd7ef42c51"
   license "MIT"
 
-  depends_on xcode: ["14.0", :build]
-  depends_on :macos
-
   def install
-    system "swift", "build", "-c", "release", "--disable-sandbox"
-    bin.install ".build/release/reminders"
+    bin.install "reminders"
   end
 end
