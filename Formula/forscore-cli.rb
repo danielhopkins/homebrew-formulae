@@ -1,8 +1,8 @@
 class ForscoreCli < Formula
   desc "CLI tool for managing forScore metadata"
   homepage "https://github.com/danielhopkins/forscore-cli"
-  url "https://github.com/danielhopkins/forscore-cli/releases/download/v1.3.0/forscore-macos-arm64.tar.gz"
-  sha256 "fe48fcb605d574661a515f227635011491a7c17110cdfdc3b6d447c884b0c524"
+  url "https://github.com/danielhopkins/forscore-cli/releases/download/v2.0.0/forscore-macos-arm64.tar.gz"
+  sha256 "8587769e7c2701f69d51ebfaeccab3c053fd473f5f9f315d74ca99b4220cedf9"
   license "MIT"
 
   def install
