@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "CLIs for local Apple app data: Notes, Mail, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.727.4/apple-tools-26.727.4.tar.gz"
-  sha256 "ccb3b49dba681d429c117c888443d193e38f748b04003feb930f8f50a599f6f7"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.727.5/apple-tools-26.727.5.tar.gz"
+  sha256 "ff7a9609a03e8bcc392bbe886375873d0b630f64cbc2404506bee3ec0519a87c"
   license "MIT"
 
   depends_on :macos
@@ -48,9 +48,14 @@ class AppleTools < Formula
         apple-calendar calendars   # Calendar access
         apple-mail accounts        # Automation access for Mail
 
-      apple-notes and apple-contacts read Apple's SQLite stores directly, which
-      requires Full Disk Access for your terminal app:
+        apple-contacts status      # Contacts access
+
+      apple-notes reads Apple's SQLite store directly, which requires Full Disk
+      Access for your terminal app:
       System Settings -> Privacy & Security -> Full Disk Access
+
+      apple-contacts also reads that store for contact notes, which the Contacts
+      framework cannot expose without an Apple-granted entitlement.
     EOS
   end
 
