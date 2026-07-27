@@ -5,7 +5,22 @@ class RemindersCli < Formula
   sha256 "9720949393039b6025190e1f8700f17dc8f6c32a0a4888ff32a3e1ff8fb4b22c"
   license "MIT"
 
+  deprecate! date: "2026-07-27", because: "it was merged into `apple-tools`"
+
+  conflicts_with "danielhopkins/formulae/apple-tools",
+                 because: "both install a `reminders` binary"
+
   def install
     bin.install "reminders"
+  end
+
+  def caveats
+    <<~EOS
+      reminders-cli now ships as part of apple-tools, alongside CLIs for Notes,
+      Mail, Calendar, and Contacts. The `reminders` command is unchanged:
+
+        brew uninstall reminders-cli
+        brew install danielhopkins/formulae/apple-tools
+    EOS
   end
 end
