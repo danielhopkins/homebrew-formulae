@@ -7,10 +7,6 @@ class AppleTools < Formula
 
   depends_on :macos
 
-  # reminders-cli was absorbed into apple-tools; both ship a `reminders` binary.
-  conflicts_with "danielhopkins/formulae/reminders-cli",
-                 because: "both install a `reminders` binary"
-
   def install
     # apple-notes imports notestore.py as a sibling module, so the two must stay
     # in the same directory. bin/apple-notes is a symlink and the script
@@ -25,6 +21,11 @@ class AppleTools < Formula
 
   def caveats
     <<~EOS
+      reminders-cli is superseded by this formula and ships the same `reminders`
+      command. If it is still installed, linking will fail until you remove it:
+
+        brew uninstall reminders-cli && brew link apple-tools
+
       Each tool needs a one-time macOS permission grant, prompted on first run
       from a terminal. Run these once and approve each dialog:
 

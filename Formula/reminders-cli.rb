@@ -7,9 +7,6 @@ class RemindersCli < Formula
 
   deprecate! date: "2026-07-27", because: "it was merged into `apple-tools`"
 
-  conflicts_with "danielhopkins/formulae/apple-tools",
-                 because: "both install a `reminders` binary"
-
   def install
     bin.install "reminders"
   end
