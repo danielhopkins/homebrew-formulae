@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.810.1/apple-tools-26.810.1.tar.gz"
-  sha256 "04f23e756d18e6531ef5034cd92eec6a4350198779b96d109b15191c7ebcc727"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.811.0/apple-tools-26.811.0.tar.gz"
+  sha256 "64d288a3aa6cb505564ab65919c549a6e7062e9c41e544b10413bc9ad4cc5f94"
   license "MIT"
 
   depends_on :macos
@@ -77,6 +77,12 @@ class AppleTools < Formula
       and reaches recipients rendered as a quotation. That needs the Automation
       grant below. There is no send; send from Mail.app.
 
+      apple-mail move refiles received messages into another mailbox, in batches,
+      for filing mail a filter rule missed. It needs both grants: Full Disk
+      Access to find each message and Automation to move it. Run it with
+      --dry-run first — that resolves everything from Mail's index without
+      touching Mail, and these moves sync to all your devices.
+
       Run `apple mail status` for the grant detail.
 
       apple-messages is read-only and needs nothing beyond that Full Disk
@@ -121,6 +127,12 @@ class AppleTools < Formula
 
     # --help must work without any TCC grant, so it is safe in a sandbox.
     assert_match "events", shell_output("#{bin}/apple-calendar --help")
+
+    # `move` is the one mail command that writes to real mailboxes, and an
+    # unregistered subcommand fails silently: apple-mail prints root help and
+    # exits 0 for any word it does not recognise, so "it ran" proves nothing.
+    # Assert it appears in the subcommand list instead.
+    assert_match "move", shell_output("#{bin}/apple-mail --help")
 
     # The Notes write path is the signed shortcuts plus the commands that drive
     # them. `make dist` cannot know this formula's install list, so a shortcut
