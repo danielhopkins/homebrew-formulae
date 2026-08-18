@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.818.0/apple-tools-26.818.0.tar.gz"
-  sha256 "7685c044c2a36b12850b3ba72f4e62436376d09e4eb564fa7d01c69750e67046"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.818.1/apple-tools-26.818.1.tar.gz"
+  sha256 "14537114be38452d71daed8465f32d92bba19f5f44b859f1521bf5c22bfc0ab9"
   license "MIT"
 
   depends_on :macos
@@ -158,7 +158,18 @@ class AppleTools < Formula
     # through private AddressBook API. If those symbols ever go missing the
     # command refuses at runtime rather than disappearing, so this only checks
     # it is registered at all.
-    assert_match "move", shell_output("#{bin}/apple-contacts --help")
+    contacts_help = shell_output("#{bin}/apple-contacts --help")
+    assert_match "move", contacts_help
+
+    # `get` returned an addresses array that `edit` could not write until
+    # 26.818.1, and the skill claimed otherwise. An unregistered flag is a
+    # silent regression back to that.
+    assert_match "address", shell_output("#{bin}/apple-contacts edit --help")
+
+    # Relationship helpers. `link` appends where `edit --relation` replaces, so
+    # losing it silently sends callers back to a command that deletes relations.
+    assert_match "relations", contacts_help
+    assert_match "link", contacts_help
 
     # The Notes write path is the signed shortcuts plus the commands that drive
     # them. `make dist` cannot know this formula's install list, so a shortcut
