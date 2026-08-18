@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.817.0/apple-tools-26.817.0.tar.gz"
-  sha256 "f8823640f425cff43106caf8fc08f94a94a087cb6e94d1a259cb55415f3a7080"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.818.0/apple-tools-26.818.0.tar.gz"
+  sha256 "7685c044c2a36b12850b3ba72f4e62436376d09e4eb564fa7d01c69750e67046"
   license "MIT"
 
   depends_on :macos
@@ -138,7 +138,15 @@ class AppleTools < Formula
     assert_match "apple-notes", shell_output("#{bin}/apple --which")
 
     # --help must work without any TCC grant, so it is safe in a sandbox.
-    assert_match "events", shell_output("#{bin}/apple-calendar --help")
+    calendar_help = shell_output("#{bin}/apple-calendar --help")
+    assert_match "events", calendar_help
+
+    # The sync-visibility commands. `add` reported success for a write the
+    # server refused with a 403 until these existed, so an unregistered one is
+    # a silent regression back to that.
+    assert_match "unsynced", calendar_help
+    assert_match "sync-errors", calendar_help
+    assert_match "resync", calendar_help
 
     # `move` is the one mail command that writes to real mailboxes, and an
     # unregistered subcommand fails silently: apple-mail prints root help and
@@ -163,6 +171,11 @@ class AppleTools < Formula
     notes_help = shell_output("#{bin}/apple-notes --help")
     assert_match "install-shortcuts", notes_help
     assert_match "append", notes_help
+
+    # `delete` is the one Notes command that removes something the user made.
+    # It is soft — the note goes to Recently Deleted — but nothing here can
+    # bring it back, so it must never go missing silently from a build.
+    assert_match "delete", notes_help
 
     # Call-recording commands. These live in mergeable.py, a sibling module
     # added after notestore.py — the one file a literal install list would have
