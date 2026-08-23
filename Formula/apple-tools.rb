@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.822.0/apple-tools-26.822.0.tar.gz"
-  sha256 "19f42f28001f2fb55ae74ab4016fb3084d6a80eba9501bfc2e53dd5ed3242180"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.822.1/apple-tools-26.822.1.tar.gz"
+  sha256 "53ced65448332a58e7f4a923647a4aa256e90d747e84c9aec04c53d6db2b8bd6"
   license "MIT"
 
   depends_on :macos
@@ -33,10 +33,30 @@ class AppleTools < Formula
     # them by walking up from its own location to share/apple-tools/shortcuts,
     # so this path is load-bearing — see `shortcuts_dir()` in apple-notes.
     (pkgshare/"shortcuts").install Dir["shortcuts/*"]
+
+    # apple-index: the semantic index across every source.
+    #
+    # 🛑 It all stays in ONE directory. `apple-index` finds index.py beside
+    # itself, index.py finds `vec` beside itself, and `vec` finds the Core ML
+    # weights in `models/` beside itself. Splitting them breaks the lookup.
+    #
+    # ⚠️ Installing builds no index and reads nothing. `apple-index refresh`
+    # asks for consent first, once, and records it. See index/SECURITY.md for
+    # what the index holds and why it is not encrypted.
+    libexec.install "index"
+    bin.install_symlink libexec/"index/apple-index"
   end
 
   def caveats
     <<~EOS
+      apple-index builds a searchable copy of your own data. It asks for
+      consent the first time and records it. Nothing is read until you run:
+        apple-index refresh
+
+      🛑 That index is NOT encrypted. Read the warning it prints, or
+        #{HOMEBREW_PREFIX}/opt/apple-tools/libexec/index/SECURITY.md
+      Remove it at any time with: apple-index forget
+
       Claude skills are installed to:
         #{HOMEBREW_PREFIX}/share/apple-tools/skills
 
@@ -243,5 +263,21 @@ class AppleTools < Formula
     maps_help = shell_output("#{bin}/apple-maps --help")
     assert_match "places", maps_help
     assert_match "guides", maps_help
+
+    # apple-index ships as ONE directory and each part finds the next one
+    # beside itself: the wrapper finds index.py, index.py finds `vec`, and
+    # `vec` finds the Core ML weights in models/. Any of those moving breaks
+    # the lookup at runtime, not at install time.
+    assert_path_exists libexec/"index/vec"
+    assert_path_exists libexec/"index/models/vocab.txt"
+
+    # --help needs no grant and touches no index.
+    index_help = shell_output("#{bin}/apple-index --help")
+    assert_match "refresh", index_help
+
+    # `forget` is the revocation path: it deletes the index, the logs and the
+    # recorded consent. lab/SECURITY.md calls it non-optional for a release,
+    # so a build without it is one that cannot be undone.
+    assert_match "forget", index_help
   end
 end
