@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.824.2/apple-tools-26.824.2.tar.gz"
-  sha256 "501729c92caf8aa802b1428f23aa7d03966de7acbc7c9ce0eaa8c7855dcb1bd6"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.824.3/apple-tools-26.824.3.tar.gz"
+  sha256 "0b1c06da5148a94a6ea39ee528533f5c3faec8d7f581bad90bdc69de317a42a0"
   license "MIT"
 
   depends_on :macos
@@ -35,9 +35,16 @@ class AppleTools < Formula
     # silently installed four skills out of five — the one for the newest
     # feature was the one missing.
     #
-    # ⚠️ `opt_libexec`, not `libexec`. A symlink into the versioned Cellar path
-    # dangles after the next upgrade; the opt prefix follows it.
-    (pkgshare/"skills").install_symlink opt_libexec/"index/skill/apple-index"
+    # 🛑 COPY IT, DO NOT SYMLINK IT. `install_symlink opt_libexec/...` looks
+    # version-proof and is not: Homebrew RELATIVIZES a symlink inside the
+    # prefix, so `opt` was rewritten to the concrete Cellar path and the link
+    # dangled the moment the next version replaced it. Shipped broken in
+    # 26.824.2 — `share/apple-tools/skills/apple-index` pointed at 26.824.1.
+    # The skill is a few kilobytes; a copy cannot dangle.
+    # ⚠️ `cp_r`, not `install`. Homebrew's `install` MOVES the path, so it would
+    # take the skill out of `index/skill/` before `libexec.install "index"`
+    # ships that directory — leaving the payload silently short one file.
+    cp_r "index/skill/apple-index", pkgshare/"skills"
 
     # The signed Shortcuts that provide the Notes write path. apple-notes finds
     # them by walking up from its own location to share/apple-tools/shortcuts,
