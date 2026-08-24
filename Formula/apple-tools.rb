@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.824.1/apple-tools-26.824.1.tar.gz"
-  sha256 "a52c643db900701570ee09620848a1f12903a8a551794c5ee17376126c8a233a"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.824.2/apple-tools-26.824.2.tar.gz"
+  sha256 "501729c92caf8aa802b1428f23aa7d03966de7acbc7c9ce0eaa8c7855dcb1bd6"
   license "MIT"
 
   depends_on :macos
@@ -29,6 +29,16 @@ class AppleTools < Formula
     # the install path in caveats and let them symlink what they want.
     (pkgshare/"skills").install Dir["skills/*"]
 
+    # 🛑 The apple-index skill ships INSIDE the index payload, at
+    # `index/skill/apple-index`, so `Dir["skills/*"]` above never saw it. The
+    # caveats tell people to symlink `share/apple-tools/skills/*`, and that line
+    # silently installed four skills out of five — the one for the newest
+    # feature was the one missing.
+    #
+    # ⚠️ `opt_libexec`, not `libexec`. A symlink into the versioned Cellar path
+    # dangles after the next upgrade; the opt prefix follows it.
+    (pkgshare/"skills").install_symlink opt_libexec/"index/skill/apple-index"
+
     # The signed Shortcuts that provide the Notes write path. apple-notes finds
     # them by walking up from its own location to share/apple-tools/shortcuts,
     # so this path is load-bearing — see `shortcuts_dir()` in apple-notes.
@@ -53,9 +63,13 @@ class AppleTools < Formula
       consent the first time and records it. Nothing is read until you run:
         apple-index refresh
 
-      🛑 That index is NOT encrypted. Read the warning it prints, or
-        #{HOMEBREW_PREFIX}/opt/apple-tools/libexec/index/SECURITY.md
-      Remove it at any time with: apple-index forget
+      🛑 That index is NOT encrypted unless you also install the app, which
+      moves it into an AES-256 disk image keyed to your Keychain:
+        brew install --cask danielhopkins/formulae/apple-tools-app
+      The app also refreshes the index on its own, every five minutes. Without
+      it, `apple-index refresh` is a job you run by hand.
+      Detail: #{HOMEBREW_PREFIX}/opt/apple-tools/libexec/index/SECURITY.md
+      Remove the index at any time with: apple-index forget
 
       Claude skills are installed to:
         #{HOMEBREW_PREFIX}/share/apple-tools/skills

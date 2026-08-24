@@ -1,6 +1,6 @@
 cask "apple-tools-app" do
-  version "26.824.1"
-  sha256 "f3d8fc9ff519cfd85fd35f055603fbe1a4bcd865f93c8d99c3f573a4d17e2088"
+  version "26.824.2"
+  sha256 "1a175f3478acc29a7ea9a5ab519765d3135de33aba589ab7e4a8e89623f66dce"
 
   url "https://github.com/danielhopkins/apple-tools/releases/download/v#{version}/AppleTools-#{version}.dmg"
   name "AppleTools"
@@ -58,6 +58,13 @@ cask "apple-tools-app" do
     your own terminal, install the formula as well:
 
       brew install danielhopkins/formulae/apple-tools
+
+    All five Claude skills ride inside the app. Link them into whichever Claude
+    config dir you use:
+
+      mkdir -p "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
+      ln -sfn /Applications/AppleTools.app/Contents/Resources/skills/* \\
+              "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/"
 
     The index holds the decoded plaintext of your mail. It lives in an AES-256
     disk image that only this app mounts, and it is readable by anything running
