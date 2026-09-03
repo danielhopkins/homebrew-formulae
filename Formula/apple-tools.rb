@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.831.0/apple-tools-26.831.0.tar.gz"
-  sha256 "f4d20981dc36a656cf746c8f028ad37e11e1106285d115fd774f24092cd0330c"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.903.0/apple-tools-26.903.0.tar.gz"
+  sha256 "d906eb1317b7bfabd560b834eee37da5ded8a89c6432646b292b81664a46298a"
   license "MIT"
 
   depends_on :macos
@@ -298,6 +298,9 @@ class AppleTools < Formula
     # `vec` finds the Core ML weights in models/. Any of those moving breaks
     # the lookup at runtime, not at install time.
     assert_path_exists libexec/"index/vec"
+    # 🛑 The PDF reader. Without it every PDF in a configured folder goes
+    # unindexed, and the only sign is a line on stderr during ingest.
+    assert_path_exists libexec/"index/doctext"
     assert_path_exists libexec/"index/models/vocab.txt"
 
     # --help needs no grant and touches no index.
