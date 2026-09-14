@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.903.0/apple-tools-26.903.0.tar.gz"
-  sha256 "d906eb1317b7bfabd560b834eee37da5ded8a89c6432646b292b81664a46298a"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.914.0/apple-tools-26.914.0.tar.gz"
+  sha256 "e5455e81de21667eed0ce07fb569710f1614b69af4c9d01e55b54aee8685c760"
   license "MIT"
 
   depends_on :macos
@@ -18,8 +18,15 @@ class AppleTools < Formula
     libexec.install "apple-notes", "notestore.proto", *Dir["*.py"]
     bin.install_symlink libexec/"apple-notes"
 
-    bin.install "apple", "apple-contacts", "apple-mail", "apple-messages",
-                "apple-phone", "apple-maps", "apple-calendar", "reminders"
+    bin.install "apple", "apple-plugins", "apple-contacts", "apple-mail",
+                "apple-messages", "apple-phone", "apple-maps", "apple-calendar",
+                "reminders"
+
+    # The plugins that ship with the tools. ⚠️ Installed, NOT enabled: a
+    # plugin runs only after `apple plugins enable <name>`, because the first
+    # one talks to a server. `apple-plugins` looks for them here, under
+    # libexec/plugins/<name>/, as well as under the user's own directory.
+    libexec.install "plugins"
 
     doc.install "README.md", "CLAUDE.md", "docs"
 
@@ -195,6 +202,11 @@ class AppleTools < Formula
 
     # The dispatcher must find each tool as a sibling in bin.
     assert_match "apple-notes", shell_output("#{bin}/apple --which")
+
+    # The manager must find the shipped plugin under libexec, and it must
+    # answer the contract. Nothing here enables it or reaches a network.
+    assert_match "dawarich", shell_output("#{bin}/apple plugins list --json")
+    assert_match "dawarich", shell_output("#{bin}/apple plugins manifest dawarich")
 
     # --help must work without any TCC grant, so it is safe in a sandbox.
     calendar_help = shell_output("#{bin}/apple-calendar --help")
