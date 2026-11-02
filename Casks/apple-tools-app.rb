@@ -1,6 +1,6 @@
 cask "apple-tools-app" do
-  version "26.924.0"
-  sha256 "b4368386ab2d9d2a31c8ceaec8cd92397979ee4672cc0ad90436f83dd93975a3"
+  version "26.1102.0"
+  sha256 "1b0eababbf3a68fcd923badc9df95b6906f142ee3b013bd880953089febf0b38"
 
   url "https://github.com/danielhopkins/apple-tools/releases/download/v#{version}/AppleTools-#{version}.dmg"
   name "AppleTools"

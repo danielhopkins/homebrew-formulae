@@ -1,8 +1,8 @@
 class AppleTools < Formula
   desc "Local CLIs for Notes, Mail, Messages, Phone, Maps, Reminders, Calendar, Contacts"
   homepage "https://github.com/danielhopkins/apple-tools"
-  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.924.0/apple-tools-26.924.0.tar.gz"
-  sha256 "3b09d0460c592f614c0a47b7d3b39dbc2bf2db9dad09356d7a71611f654dc2fd"
+  url "https://github.com/danielhopkins/apple-tools/releases/download/v26.1102.0/apple-tools-26.1102.0.tar.gz"
+  sha256 "405dcbccea88f4221b7575e407f9723eed4d365b44dbeb4b189c501d09d5356c"
   license "MIT"
 
   depends_on :macos
@@ -208,6 +208,8 @@ class AppleTools < Formula
     assert_match "dawarich", shell_output("#{bin}/apple plugins list --json")
     assert_match "dawarich", shell_output("#{bin}/apple plugins manifest dawarich")
     assert_match "health", shell_output("#{bin}/apple plugins manifest health")
+    assert_match "whatsapp", shell_output("#{bin}/apple plugins manifest whatsapp")
+    assert_match "shopping", shell_output("#{bin}/apple plugins manifest shopping")
 
     # --help must work without any TCC grant, so it is safe in a sandbox.
     calendar_help = shell_output("#{bin}/apple-calendar --help")
